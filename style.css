@@ -1,0 +1,81 @@
+thead td{
+	width: 50px;
+	height: 25px;
+	text-align: center;
+}
+
+.head{
+	width: 50px;
+	height: 50px;
+}
+
+.cell{
+	text-align: center;
+	width: 50px;
+	height: 50px;
+	background-color: lightgrey;
+}
+
+.board tbody{
+		border: 1px solid blue;
+}
+
+#left{
+	display: inline-block;
+	width: 49%;
+	float:left;
+}
+
+#right{
+	display: inline-block;
+	float:right;
+	width: 49%;
+}
+
+#player-score{
+	color : green;
+}
+
+#opponent-score{
+	color : red;
+}
+
+.score{
+	float: center;
+	text-align:center;
+	vertical-align:bottom;
+}
+
+.ship{
+	background-color : grey;
+}
+
+.targetPlr{
+	width : 48px;
+	height : 48px;
+	border : 1px solid blue;
+}
+
+.targetEnm{
+	background-image : url(img/target.gif);
+	background-size  : 52px;
+	background-repeat: no-repeat;
+	background-position : center;
+}
+
+.missed{
+	opacity: 0.5;
+}
+
+.hit{
+	background-color : red;
+}
+
+.boards{
+	display: inline-block;
+	float: center;
+}
+
+.container{
+
+}
