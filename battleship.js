@@ -191,7 +191,7 @@ window.onload = function(){
 		pl2Board.init(plr2);
 		pl2Board.draw('opponent');
 		pl2Board.setShips();
-		pl2Board.drawShips();
+		//pl2Board.drawShips();
 
 		$('#ship-setup')
 	
