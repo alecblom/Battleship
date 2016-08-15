@@ -1,4 +1,5 @@
-window.onload = function(){
+window.onload = function(){	
+
 	$('input[id^="start"]').click(function(){
 		$('input[id^="start"]').remove();
 		var plr1 = new Player();
@@ -80,4 +81,5 @@ window.onload = function(){
 			
 		});
 	});
+
 }
