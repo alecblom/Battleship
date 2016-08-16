@@ -1,7 +1,7 @@
 window.onload = function(){
 	/* Classes */
 	function Connection(){
-		this.apiKey = '?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.ImFnYmxvbUBhdmFucy5ubCI.SYPXBmpAnytrcKts7toGW5DYfaMWPyni2_0J4BOBpDw';
+		this.apiKey = '?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.ImFnLmJsb21Ac3R1ZGVudC5hdmFucy5ubCI.uIJbq_KxtqwKoYrb0rcOkMh7Sp_N4h9ka1kpvXdgxls';
 		this.xmlHttp = new XMLHttpRequest();
 		
 		this.getAction = function(type){
@@ -72,7 +72,6 @@ window.onload = function(){
 		}
 		
 		this.drawShips = function(){
-			console.log(this.ships);
 			$.each(this.ships, function(index, value){
 				this.draw();
 			})
@@ -150,9 +149,11 @@ window.onload = function(){
 		}
 		
 		this.draw = function(){
+			var name = this.name;
 			$.each(this.cells, function(index, value){
 				var cellHtml = this.getHtml('cell');
 				cellHtml.addClass('ship');
+				cellHtml.attr('name', name);
 			})
 		}
 	}
@@ -176,8 +177,8 @@ window.onload = function(){
 	}
 	
 	/* Main */
-	$('input[id^="start"]').click(function(){
-		$('input[id^="start"]').remove();
+	$("#lobbyform").on('click', 'input[id^="start"]', function(){
+		$('#lobbyform').hide();
 		var plr1 = new Player();
 		var plr2 = new Player();
 		var pl1Board = new Board();
@@ -190,10 +191,10 @@ window.onload = function(){
 		
 		pl2Board.init(plr2);
 		pl2Board.draw('opponent');
-		pl2Board.setShips();
-		//pl2Board.drawShips();
+		pl1Board.setShips();
+		pl1Board.drawShips();
 
-		$('#ship-setup')
+		$('#ship-setup');
 	
 
 	/* Jquery */
@@ -231,30 +232,51 @@ window.onload = function(){
 			$('.score').css({'display' : 'none'});
 		});
 		
-		$('.cell').click( function(){
-			if($(this).closest('table').attr('id') == 'opponent-table'){
-				var hit = false;
-				x = $(this).attr('id');
-				y = $(this).closest('tr').attr('id');
-				var target = pl2Board.getCell(x, y);
-				$.each(pl2Board.ships, function(index, value){
-					$.each(this.cells, function(index, value){
-						if(this == target){
-							alert('hit');
-							target.state = 'hit';
-							hit = true;
-						target.getHtml('cell').addClass('hit');
-							console.log(target);
-						}	
-					})
-				})
-				if(!hit){
-					target.state = 'missed';
-					target.getHtml('cell').addClass('missed');
-					console.log(target);
-				}
-			}
+		$('#gameform').on('click', '.cell', function(){
+			var x = $(this).attr('id');
+			var y = $(this).closest('tr').attr('id');
 			
+			
+			switch($(this).closest('table').attr('id')){
+				case 'opponent-table':
+					var board = pl2Board;
+					var target = board.getCell(x, y);				
+					var hit = false;
+					$.each(board.ships, function(index, value){
+						$.each(this.cells, function(index, value){
+							if(this == target){
+								alert('hit');
+								target.state = 'hit';
+								hit = true;
+							target.getHtml('cell').addClass('hit');
+								console.log(target);
+							}	
+						})
+					})
+					if(!hit){
+						target.state = 'missed';
+						target.getHtml('cell').addClass('missed');
+						console.log(target);
+					}
+					break;
+				
+				case 'player-table':
+					var board = pl1Board;
+					var target = board.getCell(x, y);
+					if($(this).hasClass('ship')){
+						console.log($(this).attr('name'));
+					}
+					break;
+			}
 		});
+		$('#gameform').show();
 	});
+	
+	$('#gameform').on('click', '#back', function(){
+		$('#gameform').hide();
+		$("table[id$='table']").empty();
+		$('#lobbyform').show();
+	});
+	
+	
 }
