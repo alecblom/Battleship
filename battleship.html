@@ -8,18 +8,18 @@
 		
 		<!--script language="JavaScript" type="text/javascript"  src="main.js"></script-->
 		<link rel="stylesheet" type="text/css" href="style.css"/>
-
+		
 	</head>
 	
 	<body>
 		<form id="lobbyform">
-			<input id='playcomp' type='button' onclick='loadDoc("jq.js")' value='Play Vs. Computer'></input>
-				<div>
+				<div  class="container">
 						<b><p>User:</p></b>
 						<p id="name"></p>
 						
 					
-					<input id='requestGame' type='button' value='Request Game'></input>
+					<input id='requestGame' type='button' value='Request Game vs Player'></input>
+					<input id='requestAIGame' type='button' value='Request Game vs Computer'></input>
 					<input id='deleteGames' type='button' value='Delete All Games'></input>
 					<b><p>Games:</p></b>
 					<ul style="list-style-type: none; padding-left: 2px;" id="gamelist">

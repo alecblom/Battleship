@@ -177,7 +177,7 @@ window.onload = function(){
 	}
 	
 	/* Main */
-	$("#lobbyform").on('click', 'input[id^="player"]', function(){
+	$("#lobbyform").on('click', 'input[class^="play"]', function(){
 		$('#lobbyform').hide();
 		var plr1 = new Player();
 		var plr2 = new Player();
