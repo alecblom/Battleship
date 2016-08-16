@@ -2,12 +2,9 @@
 <html>
 	<head>
 		<script language="JavaScript" type="text/javascript"  src="jquery-1.11.3.min.js"></script>
-		<!--script language="JavaScript" type="text/javascript"  src="jq.js"></script-->
-		<!--script language="JavaScript" type="text/javascript"  src="battleship.js"></script-->
-
-		<script language="JavaScript" type="text/javascript"  src="Lobby.js"></script>
-
+		
 		<script language="JavaScript" type="text/javascript"  src="battleship.js"></script>
+		<script language="JavaScript" type="text/javascript"  src="Lobby.js"></script>
 		
 		<!--script language="JavaScript" type="text/javascript"  src="main.js"></script-->
 		<link rel="stylesheet" type="text/css" href="style.css"/>
@@ -15,34 +12,38 @@
 	</head>
 	
 	<body>
-		
-		<input id='startplr' type='button' onclick='' value='Start Vs. Human'></input>
-		<input id='startcomp' type='button' onclick='loadDoc("jq.js")' value='Start Vs. Computer'></input>
-			<div class="container">
-					<div class="board" id='left'>
-						<table id="player-table" ></table>
-					</div>
-					<div class="board" id="right">
-						<table id="opponent-table" ></table>
-					</div>
-			</div>
-			<div>
-					<b><p>User:</p></b>
-					<p id="name"></p>
+		<form id="lobbyform">
+			<input id='playcomp' type='button' onclick='loadDoc("jq.js")' value='Play Vs. Computer'></input>
+				<div>
+						<b><p>User:</p></b>
+						<p id="name"></p>
+						
 					
-					<b><p>Games:</p></b>
 					<input id='requestGame' type='button' value='Request Game'></input>
 					<input id='deleteGames' type='button' value='Delete All Games'></input>
+					<b><p>Games:</p></b>
 					<ul style="list-style-type: none; padding-left: 2px;" id="gamelist">
-						<input id='requestGame' type='button' value='Request Game'></input>
+						
 					</ul>
+
+				</div>
+		</form>
+		<form id="gameform" hidden >
+			<div class="container">
+				<div class="board" id='left'>
+					<table id="player-table" ></table>
+				</div>
+				<div class="board" id="right">
+					<table id="opponent-table" ></table>
+				</div>
 			</div>
 			
+			<div id="ship-setup"> </div>
+			
+			<input id="back" type="button" value="back" />
+		</form>
 		<div style='text-align:right' ><a href='https://avans.github.io/Webdictaat-Javascript/eindopdracht/eindopdracht.html'>Opdracht site</a></div>
 		<div style='text-align:right' ><a href='https://zeeslagavans.herokuapp.com/docs'>API site</a></div>
-		<div id="ship-setup">
-			
-		</div>
 	</body>
 	
 </html>

@@ -1,14 +1,15 @@
-var token = '?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.InJhYS5ndWVyYW5kQHN0dWRlbnQuYXZhbnMubmwi.fl4tNVgRgFmop5BKJIrmpTHKgXzOudL01dNPXczYm5o';
+var token = '?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.ImFnLmJsb21Ac3R1ZGVudC5hdmFucy5ubCI.uIJbq_KxtqwKoYrb0rcOkMh7Sp_N4h9ka1kpvXdgxls';
 
-$(document).ready(function () {
+$(document).ready(function (a) {
 	//Loading Lobby
+	loadUserInfo();	
 	loadGamesList();
-	loadUserInfo();
+	
 
-	$('#requestGame').click(function () {
+	$('#requestGame').on('click', function () {
 		requestGame();
 	});
-	$('#deleteGames').click(function () {
+	$('#deleteGames').on('click', function () {
 		deleteGames();
 	});
 });
@@ -20,7 +21,7 @@ function loadGamesList() {
 		success : function (result) {
 			console.log(result);
 			for (x in result) {
-				$('#gamelist').append('<li>game id: ' + result[x]._id + ' status: ' + result[x].status + '<input type="button" id="#play' + result[x]._id + '" value="Play"></input><input type="button" id="#delete' + result[x]._id + '" value="Delete"></input></li>');
+				$('#gamelist').append('<li>game id: ' + result[x]._id + ' status: ' + result[x].status + '<input type="button" id="play' + result[x]._id + '" value="Play"></input><input type="button" id="delete' + result[x]._id + '" value="Delete"></input></li>');
 			}
 		},
 		error : function (request, status, errorThrown) {
@@ -72,7 +73,5 @@ function deleteGames() {
 		error : function (request, status, errorThrown) {
 			console.log("Ajax call error! Request: " + request + " status: " + status + " errorThrown: " + errorThrown);
 		}
-	});
-
-	
+	});	
 }
