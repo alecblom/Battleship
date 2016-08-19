@@ -1,28 +1,19 @@
 window.onload = function(){
 	/* Classes */
-	function Connection(){
-		this.apiKey = '?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.ImFnLmJsb21Ac3R1ZGVudC5hdmFucy5ubCI.uIJbq_KxtqwKoYrb0rcOkMh7Sp_N4h9ka1kpvXdgxls';
-		this.xmlHttp = new XMLHttpRequest();
-		
-		this.getAction = function(type){
-			this.xmlHttp.open( "GET", 'https://zeeslagavans.herokuapp.com/' + type + this.apiKey, false ); // false for synchronous request
-			this.xmlHttp.send( null );
-			return JSON.parse(this.xmlHttp.responseText);	
-		}
-		this.deleteAction = function(type){
-			this.xmlHttp.open( "GET", 'https://zeeslagavans.herokuapp.com/' + type + this.apiKey, false ); // false for synchronous request
-			this.xmlHttp.send( null );
-			return JSON.parse(this.xmlHttp.responseText);	
-		}
-		this.postAction = function(type){
-			this.xmlHttp.open( "POST", 'https://zeeslagavans.herokuapp.com/' + type + this.apiKey, false ); // false for synchronous request
-			this.xmlHttp.send( null );
-			return JSON.parse(this.xmlHttp.responseText);	
-		}
-	}
+	var plr1 = new Player();
+	var plr2 = new Player();
+	var pl1Board = new Board();
+	var pl2Board = new Board();
+	plr1.init('Alec');
+	plr2.init();
+	pl1Board.init(plr1);
+	pl1Board.setShips();
+	pl2Board.init(plr2);
 	
+	var baseUrl = 'https://zeeslagavans.herokuapp.com';
 	function Cell(){
 		this.x;
+		this.numericalX;
 		this.y;
 		this.state;
 		this.board;
@@ -32,6 +23,14 @@ window.onload = function(){
 			this.y = y;
 			this.state = 'normal';
 			this.board = board;
+			var realx;
+			var initX = new Array("A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
+			for(i = 0; i < initX.length; i++){
+				if(x == initX[i]){
+					realx = i + 1;
+				}
+			}
+			this.numericalX = realx;
 		}
 		
 		this.getHtml = function(tag){
@@ -59,16 +58,27 @@ window.onload = function(){
 		this.owner;
 		
 		this.setShips = function(){
-			var shipList = new Connection().getAction('ships');
-			var y = 1;
-			var board = this;
-			var ships = this.ships;
-			$.each(shipList, function(index, value){
-				var currShip = new Ship();
-				currShip.init(1, y, this.name, this.length, board);
-				ships.push(currShip);
-				y++;
-			})
+			var shipList;
+			$.ajax({
+				url : 'https://zeeslagavans.herokuapp.com' + '/ships/' + token,
+				success : function (result) {
+					console.log("done" + result);
+					shipList = result;
+					
+					var y = 1;
+					var board = this;
+					var ships = this.ships;
+					$.each(shipList, function(index, value){
+						var currShip = new Ship();
+						currShip.init(1, y, this.name, this.length, board);
+						ships.push(currShip);
+						y++;
+					});
+				},
+				error : function (request, status, errorThrown) {
+					console.log("Ajax call error! Request: " + request + " status: " + status + " errorThrown: " + errorThrown);
+				}
+			});
 		}
 		
 		this.drawShips = function(){
@@ -125,6 +135,15 @@ window.onload = function(){
 			}
 			$('#'+this.owner.table+'-table'+' tr#10').append('<td class="score" id="'+this.owner.table+'-score">');
 		}
+		this.loadShipByName = function(name){
+			var ship;
+			this.ships.forEach(function(currShip){
+				if(currShip.name == name){
+					ship = currShip;
+				}
+			});
+			return ship;
+		}
 
 	}
 
@@ -152,7 +171,7 @@ window.onload = function(){
 			var name = this.name;
 			$.each(this.cells, function(index, value){
 				var cellHtml = this.getHtml('cell');
-				cellHtml.addClass('ship');
+				cellHtml.addClass('ship ' + name);
 				cellHtml.attr('name', name);
 			})
 		}
@@ -177,21 +196,13 @@ window.onload = function(){
 	}
 	
 	/* Main */
-	$("#lobbyform").on('click', 'input[id^="player"]', function(){
+
+	$("#lobbyform").on('click', 'input[id^="play"]', function(){
 		$('#lobbyform').hide();
-		var plr1 = new Player();
-		var plr2 = new Player();
-		var pl1Board = new Board();
-		var pl2Board = new Board();
-		plr1.init('Alec');
-		plr2.init();
-		
-		pl1Board.init(plr1);
 		pl1Board.draw('player');
 		
-		pl2Board.init(plr2);
 		pl2Board.draw('opponent');
-		pl1Board.setShips();
+		
 		pl1Board.drawShips();
 
 		$('#ship-setup');
@@ -200,6 +211,32 @@ window.onload = function(){
 	/* Jquery */
 
 		$('.cell').mouseenter(function(){
+			var selectedShipCells = $('.placing');
+			if(selectedShipCells.length > 0){
+				var selectedShip = pl1Board.loadShipByName(selectedShipCells.attr('name'));
+				var x = $(this).attr('id');
+				var y = $(this).closest('tr').attr('id');
+				var cell = pl1Board.getCell(x, y);
+				x = cell.numericalX;
+				selectedShipCells.removeClass('ship');
+				selectedShipCells.removeClass('placing');
+				for(i = 0; i < selectedShip.length; i++){
+					switch(selectedShip.alignment){
+						case 'horizontal':
+							x = x + i;
+							break;
+						case 'vertical':
+							y = y + i;
+							break;
+					}
+					cell = pl1Board.getCell(x, y);
+					console.log(cell);
+					cell.getHtml('cell').addClass('ship');
+					cell.getHtml('cell').addClass('placing');
+				}
+			}
+			
+			
 			if($(this).closest('table').attr('id') == "player-table"){
 				x = $(this).attr('id');
 				y = $(this).closest('tr').attr('id');
@@ -264,7 +301,14 @@ window.onload = function(){
 					var board = pl1Board;
 					var target = board.getCell(x, y);
 					if($(this).hasClass('ship')){
-						console.log($(this).attr('name'));
+						var boatCells = $("td[name='" + $(this).attr('name') +"']");
+						
+						if($(this).hasClass('placing')){
+							$('.ship').removeClass('placing');						
+							return;
+						}
+						$('.ship').removeClass('placing');
+						boatCells.addClass('placing');
 					}
 					break;
 			}

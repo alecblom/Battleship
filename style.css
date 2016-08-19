@@ -79,3 +79,7 @@ thead td{
 .container{
 
 }
+
+.placing{
+	-webkit-filter:drop-shadow(3px 3px 5px black);
+}
